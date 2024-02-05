@@ -1,6 +1,6 @@
 import express from "express";
 import connectDatabase from "./config/dbConnect.js";
-import livro from "./models/livro.js";
+import routes from "./routes/index.js";
 
 const conexao = await connectDatabase();
 
@@ -13,19 +13,7 @@ conexao.once("open", () => {
 });
 
 const app = express(); //importando todo conjunto do express para esta variavel app
-app.use(express.json()); // middleware -- pode modificar um objeto
-    //os dados do req chegam como string
-
-
-app.get("/", (req, res) => {
-
-  res.status(200).send("rodando express");
-});
-
-app.get("/livros", async (req, res) => {
-  const listaLivros = await livro.find({});
-  res.status(200).json(listaLivros);
-});
+routes(app);
 
 app.put('/livros/:id', (req, res) => {
   const index = buscaLivro(req.params.id);
@@ -34,8 +22,7 @@ app.put('/livros/:id', (req, res) => {
 })
 
 app.post('/livros', (req, res) => {
-  livros.push(req.body);
-  res.status(201).send('livro cadastrado com sucesso')
+ 
 })
 
 app.delete("/livros/:id", (req, res) => {
